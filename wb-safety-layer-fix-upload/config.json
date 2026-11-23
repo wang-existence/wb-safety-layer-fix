@@ -1,0 +1,11 @@
+{
+  "enabled": true,
+  "policy": true,
+  "preamble": true,
+  "envelope": false,
+  "engineBypass": true,
+  "audit": false,
+  "promptInject": true,
+  "adultFiction": true,
+  "extraRules": []
+}

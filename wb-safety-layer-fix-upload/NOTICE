@@ -1,0 +1,32 @@
+wb-safety-layer-fix
+Copyright (c) 2026 wb-safety-layer-fix contributors
+
+1. Unofficial. This project is not affiliated with, endorsed by, or supported by
+   Tencent, WorkBuddy, CodeBuddy, or DeepSeek. Product names are used only to
+   describe what the code interoperates with.
+
+2. What is touched. The patch engine modifies files inside the local WorkBuddy
+   installation that the operator already has on disk:
+       <install>/resources/app.asar.unpacked/cli/product.json
+       <install>/resources/app.asar.unpacked/cli/dist/codebuddy-lite-wb.mjs
+       <profile>/settings.json              (two keys only)
+   Every modified file is backed up next to itself as `<file>.wbpurge.bak` before
+   the first write, and `revert` restores those backups. The plugin never edits a
+   source repository, never contacts a network service, and ships no binaries.
+
+3. No redistribution of vendor code. This repository contains only original code
+   plus short strings quoted for the purpose of matching the host's own files.
+   No WorkBuddy/CodeBuddy/DeepSeek source, bundle, asset, or key material is
+   redistributed here.
+
+4. Intended use. Local, operator-authorized evaluation of an installation you
+   own or administer: research into how a host's prompt, approval and review
+   layers shape agent behaviour, and into whether a given default policy should
+   be tightened or relaxed. Running the patch reduces host-side guardrails
+   (`Sandbox=false`, `permissions.defaultMode=bypassPermissions`); that is a
+   deliberate, reversible change to your own machine, made by you.
+
+5. No warranty. The software is provided under the MIT License, without warranty
+   of any kind. A host update may move the strings the patch table targets; the
+   tool then reports `conflict` and refuses to write. Review `verify` output
+   before trusting a patched install.

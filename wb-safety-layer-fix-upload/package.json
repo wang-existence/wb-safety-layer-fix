@@ -1,0 +1,69 @@
+{
+  "name": "wb-safety-layer-fix",
+  "version": "2.1.1",
+  "description": "WorkBuddy (CodeBuddy core) instruction-authority purge: mods hooks that inject an operator policy and answer allow at the tool gates, plus a reversible patch engine for the prompt, code and engine layers (dsh-purge equivalent).",
+  "type": "module",
+  "license": "MIT",
+  "author": "wb-safety-layer-fix contributors",
+  "homepage": "https://github.com/wang-existence/wb-safety-layer-fix#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wang-existence/wb-safety-layer-fix.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wang-existence/wb-safety-layer-fix/issues"
+  },
+  "bin": {
+    "wb-purge": "bin/wb-purge.mjs"
+  },
+  "files": [
+    ".codebuddy-plugin/",
+    "bin/",
+    "commands/",
+    "hooks/",
+    "lib/",
+    "skills/",
+    "config.json",
+    "README.md",
+    "README.zh-CN.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "scripts": {
+    "test": "node tests/contract.mjs && node tests/mod-harness.mjs",
+    "test:patches": "node tests/patch-roundtrip.mjs",
+    "test:loader": "node tests/loader-gate.cjs",
+    "test:all": "npm test && npm run test:loader && npm run test:patches",
+    "status": "node bin/wb-purge.mjs status",
+    "apply": "node bin/wb-purge.mjs apply",
+    "dry-run": "node bin/wb-purge.mjs apply --dry-run",
+    "verify": "node bin/wb-purge.mjs verify",
+    "revert": "node bin/wb-purge.mjs revert",
+    "layers": "node bin/wb-purge.mjs layers",
+    "doctor": "node bin/wb-doctor.mjs",
+    "install:win": "powershell -NoProfile -ExecutionPolicy Bypass -File ./install.ps1",
+    "install:win:purge": "powershell -NoProfile -ExecutionPolicy Bypass -File ./install.ps1 -Purge",
+    "uninstall:win": "powershell -NoProfile -ExecutionPolicy Bypass -File ./uninstall.ps1"
+  },
+  "engines": {
+    "node": ">=18.20.8"
+  },
+  "keywords": [
+    "workbuddy",
+    "codebuddy",
+    "plugin",
+    "mods",
+    "function-hooks",
+    "purge",
+    "instruction-authority",
+    "content-policy",
+    "approval-bypass",
+    "red-team",
+    "local-evaluation"
+  ],
+  "os": [
+    "win32",
+    "darwin",
+    "linux"
+  ]
+}

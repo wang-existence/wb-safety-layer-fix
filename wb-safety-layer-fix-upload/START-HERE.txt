@@ -1,0 +1,93 @@
+﻿════════════════════════════════════════════════════════════════════
+ wb-safety-layer-fix — 一键上传到 GitHub
+════════════════════════════════════════════════════════════════════
+
+这个文件夹本身就是仓库：已 git init、已在 main 分支、已有 3 个提交。
+不要重新 git init，也不要把文件零散复制到别处。
+
+────────────────────────────────────────────────────────────────────
+第一步：双击「一键上传到GitHub.cmd」
+────────────────────────────────────────────────────────────────────
+
+它依次做：
+
+  1. 校验 .git / package.json / git 可用性，打印版本与当前提交
+  2. 问你的 GitHub 用户名（或组织名）
+  3. 把 OWNER 占位符替换成你的用户名
+     （只改 README.md、README.zh-CN.md、package.json、.github 模板；
+       上传脚本和本文档里的示例占位符保持原样）
+  4. 有改动就提交一条 chore: point repository URLs at <你的用户名>
+  5. 建仓并推送
+
+第 5 步两条路径：
+
+  · 装了 GitHub CLI（gh）且已 gh auth login
+      → gh repo create --source . --push，全自动，结束
+
+  · 没装 gh
+      → 自动打开 https://github.com/new
+        创建一个「空仓库」（不要勾 README / .gitignore / license）
+        把页面上的 clone URL 粘回终端
+      → git remote add origin <URL> && git push -u origin HEAD:main
+
+第一次 push 会弹浏览器走 Git Credential Manager 登录，登录一次以后不再问。
+
+────────────────────────────────────────────────────────────────────
+前置条件
+────────────────────────────────────────────────────────────────────
+
+  Git for Windows   https://git-scm.com/download/win           （必需）
+  GitHub CLI        winget install GitHub.cli && gh auth login  （可选，装了更省事）
+  PowerShell        5.1（系统自带）或 7+ 均可
+  Node              ≥ 18.20.8（只有跑测试才需要，上传不需要）
+
+────────────────────────────────────────────────────────────────────
+全自动 / 私有仓库 / 干跑
+────────────────────────────────────────────────────────────────────
+
+在本文件夹里打开 PowerShell：
+
+  # 公开仓库，全自动
+  powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\push-to-github.ps1 -Owner <你的用户名>
+
+  # 私有仓库
+  powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\push-to-github.ps1 -Owner <你的用户名> -Private
+
+  # 仓库已经手动建好，直接推
+  powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\push-to-github.ps1 `
+    -RemoteUrl https://github.com/<你的用户名>/wb-safety-layer-fix.git
+
+  # 干跑：只打印将执行的命令，不改文件不推送
+  powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\push-to-github.ps1 -Owner <你的用户名> -DryRun
+
+────────────────────────────────────────────────────────────────────
+报错怎么办
+────────────────────────────────────────────────────────────────────
+
+  remote: Repository not found
+      → 仓库没建，或建在别的账号下。用 -RemoteUrl 指定正确地址。
+
+  failed to push some refs / non-fast-forward
+      → 建仓时勾了 README，远程已有一条提交。
+        删掉重建成空仓库；或 git push -u origin HEAD:main --force-with-lease
+
+  README 里还是 OWNER
+      → 第 3 步没跑到。手动替换：
+        Get-ChildItem -Recurse -File -Include *.md,*.json,*.yml |
+          ForEach-Object { (Get-Content $_.FullName -Raw) -replace 'OWNER','<你的用户名>' |
+          Set-Content $_.FullName -NoNewline -Encoding UTF8 }
+        git add -A; git commit -m "docs: point repository URLs at <你的用户名>"
+
+  Actions 第一次跑
+      → contract 与 mod-harness 必须绿；patch round-trip 在 runner 上没有
+        WorkBuddy 安装，会自动跳过，这是设计行为。
+
+  git 提交身份
+      → 本副本的 .git/config 里写的是占位身份。想换成你自己：
+        git config user.name "你的名字"
+        git config user.email "你的邮箱"
+        （需要时就 git commit --amend --reset-author，不影响已上传内容）
+
+详细排错：docs/UPLOAD.md
+仓库说明：README.zh-CN.md
+────────────────────────────────────────────────────────────────────

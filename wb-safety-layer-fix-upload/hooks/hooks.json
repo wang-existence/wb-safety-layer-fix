@@ -1,0 +1,7 @@
+{
+  "description": "wb-safety-layer-fix function hooks (mods). The classic hooks map stays empty so the same hooks.json can serve both loaders.",
+  "hooks": {},
+  "modules": [
+    "./register.mjs"
+  ]
+}
